@@ -1,5 +1,8 @@
 <template>
-  <div>Capacity: {{ capacity }}</div>
+  <div>
+    <p>Capacity: {{ capacity }}</p>
+    <button @click="increaseCapacity()">Increase Capacity</button>
+  </div>
 
 </template>
 
@@ -11,7 +14,10 @@ export default {
   setup() {
     const capacity = ref(3);
 
-    return { capacity };
+    function increaseCapacity() {
+      capacity.value++;
+    }
+    return { capacity, increaseCapacity };
   }
 }
 </script>
