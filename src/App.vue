@@ -6,29 +6,31 @@
     <h2>Attending</h2>
     <ul>
       <li v-for='(name, index) in attending' :key='index'>
-        {{ name}}</li>
+        {{ name}}
+      </li>
     </ul>
   </div>
 
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, reactive, toRefs} from "vue";
 
 export default {
   name: 'App',
   setup() {
-    const capacity = ref(4);
-    const attending = ref(["Tim", "Bob", "Joe"]);
-
-    const spacesLeft = computed(()=> {
-      return capacity.value - attending.value.length;
-    })
+    const event = reactive({
+      capacity: 4,
+      attending: ["Tim", "Bob", "Joe"],
+      spacesLeft: computed(()=> {
+        return event.capacity - event.attending.length;
+      })
+    });
 
     function increaseCapacity() {
-      capacity.value++;
+      event.capacity++;
     }
-    return { capacity, increaseCapacity, attending, spacesLeft };
+    return { ...toRefs(event), increaseCapacity};
   }
 }
 </script>
