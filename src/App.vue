@@ -14,25 +14,17 @@
 </template>
 
 <script>
-import {computed, reactive, toRefs} from "vue";
+import useEventSpace from "@/use/event-space";
 
 export default {
   name: 'App',
   setup() {
-    const event = reactive({
-      capacity: 4,
-      attending: ["Tim", "Bob", "Joe"],
-      spacesLeft: computed(()=> {
-        return event.capacity - event.attending.length;
-      })
-    });
+    const { capacity, attending, spacesLeft, increaseCapacity } = useEventSpace();
 
-    function increaseCapacity() {
-      event.capacity++;
-    }
-    return { ...toRefs(event), increaseCapacity};
+    return { capacity, attending, spacesLeft, increaseCapacity }
   }
 }
+
 </script>
 
 <style>
