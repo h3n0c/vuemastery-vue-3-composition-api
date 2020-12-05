@@ -1,12 +1,12 @@
 <template>
   <div>
-    <p>Spaces Left: {{ spacesLeft }} out of {{ capacity }}</p>
-    <p>Capacity: {{ capacity }}</p>
-    <button @click="increaseCapacity()">Increase Capacity</button>
+    <p>Spaces Left: {{ eventSpace.spacesLeft.value }} out of {{ eventSpace.capacity.value }}</p>
+    <p>Capacity: {{ eventSpace.capacity.value }}</p>
+    <button @click="eventSpace.increaseCapacity()">Increase Capacity</button>
 
     <h2>Attending</h2>
     <ul>
-      <li v-for='(name, index) in attending' :key='index'>
+      <li v-for='(name, index) in eventSpace.attending.value' :key='index'>
         {{ name}}
       </li>
     </ul>
@@ -14,7 +14,9 @@
     <h2>Searching</h2>
     Search for <input v-model="searchInput" />
     <div>
-      <p>Number of events: {{ results }}</p>
+      <p>Loading: {{ getEvents.loading.value }}</p>
+      <p>Error: {{ getEvents.error.value }}</p>
+      <p>Number of events: {{ getEvents.results.value }}</p>
     </div>
   </div>
 
@@ -23,8 +25,9 @@
 <script>
 import useEventSpace from "@/use/event-space";
 
-import {onBeforeMount, onMounted, ref, watchEffect} from "vue";
+import {onBeforeMount, onMounted, ref, watch } from "vue";
 import getEventCount from "./api/event";
+import usePromise from "./composables/use-promise";
 
 
 export default {
@@ -38,20 +41,21 @@ export default {
     })
 
     const searchInput = ref("");
-    const results = ref(0);
+    const getEvents = usePromise(search => getEventCount(search.value)
+    );
 
-    watchEffect(() => {
-      results.value = getEventCount(searchInput.value);
-    });
-    /*watch(searchInput, (newVal, oldVal) => {
-    ...
-    });
-    watch([firstName, lastName], ([newFirst, newLast], [oldFirst, oldLast]) => {
-    ...
-    });*/
-    const { capacity, attending, spacesLeft, increaseCapacity } = useEventSpace();
 
-    return { capacity, attending, spacesLeft, increaseCapacity, results, searchInput }
+    watch(searchInput, () => {
+      if (searchInput.value !== "") {
+        getEvents.createPromise(searchInput);
+      } else {
+        getEvents.results.value = null;
+      }
+    });
+
+    const eventSpace = useEventSpace();
+
+    return { eventSpace, searchInput, getEvents }
   }
 }
 
