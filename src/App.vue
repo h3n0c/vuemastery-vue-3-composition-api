@@ -15,10 +15,17 @@
 
 <script>
 import useEventSpace from "@/use/event-space";
+import {onBeforeMount, onMounted} from "vue";
 
 export default {
   name: 'App',
   setup() {
+    onBeforeMount(() => {
+      console.log('Before Mount!');
+    })
+    onMounted(() => {
+      console.log('Mounted!');
+    })
     const { capacity, attending, spacesLeft, increaseCapacity } = useEventSpace();
 
     return { capacity, attending, spacesLeft, increaseCapacity }
