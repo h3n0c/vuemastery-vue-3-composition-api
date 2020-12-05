@@ -1,15 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>Capacity: {{ capacity }}</div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {ref} from "vue";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  setup() {
+    const capacity = ref(3);
+
+    return { capacity };
   }
 }
 </script>
